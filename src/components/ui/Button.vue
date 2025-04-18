@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  variant?: 'primary' | 'secondary' | 'danger' | 'success'
+  variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'info'
   size?: 'sm' | 'md' | 'lg'
   icon?: any // Component reference for icon
   iconPosition?: 'left' | 'right'
@@ -8,19 +8,16 @@ interface Props {
   type?: 'button' | 'submit' | 'reset'
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  variant: 'primary',
-  size: 'md',
-  iconPosition: 'left',
-  disabled: false,
-  type: 'button'
-})
+// Use defineProps directly without assigning to a variable
+const { variant = 'primary', size = 'md', iconPosition = 'left', disabled = false, type = 'button', icon } = defineProps<Props>()
 
 const variantClasses = {
   primary: 'bg-primary hover:bg-primary-dark text-white',
   secondary: 'bg-secondary hover:bg-secondary-dark text-white',
-  danger: 'bg-red-600 hover:bg-red-700 text-white',
-  success: 'bg-green-600 hover:bg-green-700 text-white'
+  danger: 'bg-error hover:bg-error text-white',
+  success: 'bg-success hover:bg-success text-white',
+  warning: 'bg-warning hover:bg-warning text-white',
+  info: 'bg-info hover:bg-info text-white'
 }
 
 const sizeClasses = {

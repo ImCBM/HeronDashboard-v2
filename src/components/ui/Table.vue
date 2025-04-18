@@ -1,29 +1,90 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 interface Column {
   key: string
   label: string
-  type?: 'text' | 'status' | 'actions'
+  type?: 'text' | 'status' | 'actions' | 'date' | 'number'
+  sortable?: boolean
   statusColors?: {
     [key: string]: {
       bg: string
       text: string
     }
   }
+  width?: string
 }
 
 interface Props {
   columns: Column[]
   data: any[]
   maxHeight?: string
+  loading?: boolean
+  selectable?: boolean
+  emptyStateMessage?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  maxHeight: '500px'
+  maxHeight: '500px',
+  loading: false,
+  selectable: false,
+  emptyStateMessage: "No data available"
 })
+
+const emit = defineEmits(['rowClick', 'sort', 'selectionChange'])
+
+const selectedRows = ref<Set<number>>(new Set())
+const sortKey = ref('')
+const sortDir = ref<'asc' | 'desc'>('asc')
 
 const getStatusClasses = (status: string, colors: Column['statusColors']) => {
   if (!colors || !colors[status]) return 'bg-gray-100 text-gray-800'
   return `${colors[status].bg} ${colors[status].text}`
+}
+
+const toggleSelectAll = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  if (target.checked) {
+    selectedRows.value = new Set(props.data.map((_, index) => index))
+  } else {
+    selectedRows.value.clear()
+  }
+  emit('selectionChange', Array.from(selectedRows.value).map(index => props.data[index]))
+}
+
+const toggleRowSelection = (index: number) => {
+  if (selectedRows.value.has(index)) {
+    selectedRows.value.delete(index)
+  } else {
+    selectedRows.value.add(index)
+  }
+  emit('selectionChange', Array.from(selectedRows.value).map(i => props.data[i]))
+}
+
+const handleSort = (column: Column) => {
+  if (!column.sortable) return
+  
+  if (sortKey.value === column.key) {
+    sortDir.value = sortDir.value === 'asc' ? 'desc' : 'asc'
+  } else {
+    sortKey.value = column.key
+    sortDir.value = 'asc'
+  }
+  
+  emit('sort', { key: sortKey.value, direction: sortDir.value })
+}
+
+const formatValue = (value: any, type: string = 'text') => {
+  if (value == null) return '—'
+  
+  switch (type) {
+    case 'date':
+      return new Date(value).toLocaleDateString()
+    case 'number':
+      return typeof value === 'number' ? value.toLocaleString() : value
+    default:
+      return value
+  }
 }
 </script>
 
@@ -34,17 +95,74 @@ const getStatusClasses = (status: string, colors: Column['statusColors']) => {
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50 sticky top-0">
             <tr>
+              <th v-if="selectable" class="px-4 py-3 w-10">
+                <input 
+                  type="checkbox" 
+                  class="rounded text-blue-600 focus:ring-blue-500"
+                  :checked="selectedRows.size === data.length && data.length > 0"
+                  :disabled="data.length === 0"
+                  @change="toggleSelectAll"
+                />
+              </th>
               <th
                 v-for="column in columns"
                 :key="column.key"
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                :class="{ 'cursor-pointer hover:bg-gray-100': column.sortable }"
+                :style="column.width ? { width: column.width } : {}"
+                @click="handleSort(column)"
               >
-                {{ column.label }}
+                <div class="flex items-center space-x-1">
+                  <span>{{ column.label }}</span>
+                  <span v-if="column.sortable && sortKey === column.key">
+                    {{ sortDir === 'asc' ? '↑' : '↓' }}
+                  </span>
+                </div>
               </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="(row, index) in data" :key="index">
+          <tbody v-if="loading" class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td 
+                :colspan="selectable ? columns.length + 1 : columns.length"
+                class="px-6 py-4 text-center text-gray-500"
+              >
+                <div class="flex justify-center items-center space-x-2">
+                  <svg class="animate-spin h-5 w-5 text-blue-500" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Loading...</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else-if="data.length === 0" class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td 
+                :colspan="selectable ? columns.length + 1 : columns.length"
+                class="px-6 py-10 text-center text-gray-500"
+              >
+                {{ emptyStateMessage }}
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-else class="bg-white divide-y divide-gray-200">
+            <tr 
+              v-for="(row, index) in data" 
+              :key="index" 
+              class="hover:bg-gray-50 transition-colors"
+              :class="{ 'bg-blue-50': selectedRows.has(index) }"
+              @click="emit('rowClick', row)"
+            >
+              <td v-if="selectable" class="px-4 py-4" @click.stop>
+                <input 
+                  type="checkbox" 
+                  class="rounded text-blue-600 focus:ring-blue-500"
+                  :checked="selectedRows.has(index)"
+                  @change="toggleRowSelection(index)"
+                />
+              </td>
               <td
                 v-for="column in columns"
                 :key="column.key"
@@ -59,12 +177,12 @@ const getStatusClasses = (status: string, colors: Column['statusColors']) => {
                   </span>
                 </template>
                 <template v-else-if="column.type === 'actions'">
-                  <slot :name="column.key" :row="row">
+                  <slot :name="column.key" :row="row" :index="index">
                     {{ row[column.key] }}
                   </slot>
                 </template>
                 <template v-else>
-                  {{ row[column.key] }}
+                  {{ formatValue(row[column.key], column.type) }}
                 </template>
               </td>
             </tr>
