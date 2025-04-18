@@ -2,14 +2,18 @@
 interface Props {
   variant?: 'primary' | 'secondary' | 'danger' | 'success'
   size?: 'sm' | 'md' | 'lg'
-  icon?: string
+  icon?: any // Component reference for icon
   iconPosition?: 'left' | 'right'
+  disabled?: boolean
+  type?: 'button' | 'submit' | 'reset'
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   size: 'md',
-  iconPosition: 'left'
+  iconPosition: 'left',
+  disabled: false,
+  type: 'button'
 })
 
 const variantClasses = {
@@ -24,27 +28,31 @@ const sizeClasses = {
   md: 'px-4 py-2',
   lg: 'px-6 py-3 text-lg'
 }
+
+defineEmits(['click'])
 </script>
 
 <template>
   <button
+    :type="type"
+    :disabled="disabled"
     :class="[
-      'rounded-md font-medium transition-colors flex items-center justify-center gap-2',
+      'rounded-md font-medium transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2',
       variantClasses[variant],
-      sizeClasses[size]
+      sizeClasses[size],
+      disabled ? 'opacity-50 cursor-not-allowed' : ''
     ]"
+    @click="$emit('click')"
   >
-    <img
+    <component 
+      :is="icon" 
       v-if="icon && iconPosition === 'left'"
-      :src="icon"
-      alt="Button icon"
       class="w-5 h-5"
     />
     <slot></slot>
-    <img
+    <component 
+      :is="icon" 
       v-if="icon && iconPosition === 'right'"
-      :src="icon"
-      alt="Button icon"
       class="w-5 h-5"
     />
   </button>
