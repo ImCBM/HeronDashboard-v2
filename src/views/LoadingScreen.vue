@@ -24,7 +24,7 @@ onMounted(() => {
 
 <template>
   <div id="loading-screen" class="fixed inset-0 bg-primary flex items-center justify-center transition-all duration-500">
-    <img src="/logo.png" alt="HeronFit" class="w-32 h-32">
+    <img src="/src/assets/img/heronFitSplashText.png" alt="HeronFitSplashText " class="w-32 h-32">
   </div>
 </template>
 
