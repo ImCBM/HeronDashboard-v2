@@ -14,7 +14,7 @@ const handleSubmit = () => {
   <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="bg-white p-8 rounded-lg shadow-xl w-96">
       <div class="flex justify-center mb-6">
-        <img src="/logo.png" alt="HeronFit" class="h-16">
+        <img src="/src/assets/img/heronFitSplashText.png" alt="HeronFit" class="h-16">
       </div>
       <h1 class="text-2xl font-bold mb-6 text-center">HeronFit Admin Portal</h1>
       
