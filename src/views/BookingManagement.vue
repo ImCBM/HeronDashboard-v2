@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import Tabs from '../components/ui/Tabs.vue'
 import TabPanel from '../components/ui/TabPanel.vue'
 import Table from '../components/ui/Table.vue'
+import { Column } from '../components/ui/Table.vue'
 
 const currentTab = ref('dashboard')
 const tabs = [
@@ -13,48 +14,6 @@ const tabs = [
 ]
 
 const bookings = [
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketStatus: 'Verified',
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketStatus: 'Verified',
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketStatus: 'Verified',
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketStatus: 'Verified',
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketStatus: 'Verified',
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketStatus: 'Verified',
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketStatus: 'Verified',
-  },
   {
     name: 'John Case',
     date: '2024-10-15 8:00 AM',
@@ -75,7 +34,8 @@ const bookings = [
   }
 ]
 
-const columns = [
+// Your columns definition using the imported type
+const columns: Column[] = [
   { key: 'name', label: 'Name' },
   { key: 'date', label: 'Date & Time' },
   { 

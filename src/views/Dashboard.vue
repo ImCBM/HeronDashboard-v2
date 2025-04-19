@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Card from '../components/ui/Card.vue'
 import Table from '../components/ui/Table.vue'
+import type { Column } from '../components/ui/Table.vue'
 
 const stats = [
   { label: 'Total Users', value: '1,234' },
@@ -34,34 +35,11 @@ const bookings = [
     date: '2024-10-15 8:00 AM',
     status: 'Pending',
     ticketId: 'Verified'
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketId: 'Verified'
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketId: 'Verified'
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketId: 'Verified'
-  },
-  {
-    name: 'John Case',
-    date: '2024-10-15 8:00 AM',
-    status: 'Pending',
-    ticketId: 'Verified'
   }
 ]
 
-const columns = [
+// Define columns with proper typing
+const columns: Column[] = [
   { key: 'name', label: 'Name' },
   { key: 'date', label: 'Date & Time' },
   { 

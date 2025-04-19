@@ -30,36 +30,6 @@ const sessions = [
     time: '8:00 AM - 10:00 AM',
     capacity: '15/20',
     status: 'Active'
-  },
-  {
-    name: 'Morning Session',
-    time: '8:00 AM - 10:00 AM',
-    capacity: '15/20',
-    status: 'Active'
-  },
-  {
-    name: 'Morning Session',
-    time: '8:00 AM - 10:00 AM',
-    capacity: '15/20',
-    status: 'Active'
-  },
-  {
-    name: 'Morning Session',
-    time: '8:00 AM - 10:00 AM',
-    capacity: '15/20',
-    status: 'Active'
-  },
-  {
-    name: 'Morning Session',
-    time: '8:00 AM - 10:00 AM',
-    capacity: '15/20',
-    status: 'Active'
-  },
-  {
-    name: 'Morning Session',
-    time: '8:00 AM - 10:00 AM',
-    capacity: '15/20',
-    status: 'Active'
   }
 ]
 
@@ -70,12 +40,12 @@ const columns = [
   { 
     key: 'status', 
     label: 'Status',
-    type: 'status',
+    type: 'status' as const, // Add type assertion here
     statusColors: {
       'Active': { bg: 'bg-green-100', text: 'text-green-800' }
     }
   },
-  { key: 'actions', label: 'Actions', type: 'actions' }
+  { key: 'actions', label: 'Actions', type: 'actions' as const } // Add type assertion here
 ]
 </script>
 

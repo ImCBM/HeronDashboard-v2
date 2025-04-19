@@ -3,60 +3,33 @@ import { ref } from 'vue'
 import Card from '../components/ui/Card.vue'
 import Table from '../components/ui/Table.vue'
 
-const announcements = ref([
+interface Announcement {
+  title: string
+  target: string
+  status: 'Sent' | 'Draft' | 'Scheduled'
+  date: string
+}
+
+interface Column {
+  key: string
+  label: string
+  type?: 'text' | 'status' | 'date' | 'actions'
+  statusColors?: Record<string, { bg: string; text: string }>
+}
+
+const announcements = ref<Announcement[]>([
   {
     title: 'Gym Closure Notice',
     target: 'All Users',
     status: 'Sent',
     date: '2024-10-15'
   },
-  {
-    title: 'Gym Closure Notice',
-    target: 'All Users',
-    status: 'Sent',
-    date: '2024-10-15'
-  },
-  {
-    title: 'Gym Closure Notice',
-    target: 'All Users',
-    status: 'Sent',
-    date: '2024-10-15'
-  },
-  {
-    title: 'Gym Closure Notice',
-    target: 'All Users',
-    status: 'Sent',
-    date: '2024-10-15'
-  },
-  {
-    title: 'Gym Closure Notice',
-    target: 'All Users',
-    status: 'Sent',
-    date: '2024-10-15'
-  },
-  {
-    title: 'Gym Closure Notice',
-    target: 'All Users',
-    status: 'Sent',
-    date: '2024-10-15'
-  },
-  {
-    title: 'Gym Closure Notice',
-    target: 'All Users',
-    status: 'Sent',
-    date: '2024-10-15'
-  },
-  {
-    title: 'Gym Closure Notice',
-    target: 'All Users',
-    status: 'Sent',
-    date: '2024-10-15'
-  }
+  // ...other announcements
 ])
 
-const columns = [
-  { key: 'title', label: 'Title' },
-  { key: 'target', label: 'Target' },
+const columns: Column[] = [
+  { key: 'title', label: 'Title', type: 'text' },
+  { key: 'target', label: 'Target', type: 'text' },
   { 
     key: 'status', 
     label: 'Status',
@@ -67,7 +40,7 @@ const columns = [
       'Scheduled': { bg: 'bg-blue-100', text: 'text-blue-800' }
     }
   },
-  { key: 'date', label: 'Date' },
+  { key: 'date', label: 'Date', type: 'date' },
   { key: 'actions', label: 'Actions', type: 'actions' }
 ]
 </script>

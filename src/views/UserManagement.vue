@@ -25,51 +25,6 @@ const users = [
     status: 'Active'
   },
   {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
     name: 'Jane Smith',
     email: 'jane@example.com',
     status: 'Inactive'
@@ -82,13 +37,13 @@ const columns = [
   { 
     key: 'status', 
     label: 'Status',
-    type: 'status',
+    type: 'status' as const, // Add type assertion here
     statusColors: {
       'Active': { bg: 'bg-green-100', text: 'text-green-800' },
       'Inactive': { bg: 'bg-red-100', text: 'text-red-800' }
     }
   },
-  { key: 'actions', label: 'Actions', type: 'actions' }
+  { key: 'actions', label: 'Actions', type: 'actions' as const } // Add type assertion here
 ]
 
 const openUserDetails = () => {
