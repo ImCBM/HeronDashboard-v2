@@ -1,14 +1,45 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import Card from '../components/ui/Card.vue'
 import Table from '../components/ui/Table.vue'
 import type { Column } from '../components/ui/Table.vue'
+import { DashboardController } from '../controllers/DashboardController'
+import { 
+  UsersIcon, 
+  UserGroupIcon, 
+  CalendarDaysIcon, 
+  TicketIcon 
+} from '@heroicons/vue/24/outline'
+
+const totalUsers = ref('0')
 
 const stats = [
-  { label: 'Total Users', value: '1,234' },
-  { label: 'Current Occupancy', value: '10/15 (65% full)' },
-  { label: "Today's Bookings", value: '48' },
-  { label: 'Pending Tickets', value: '48' }
+  { 
+    label: 'Total Users', 
+    value: totalUsers,
+    icon: UsersIcon,
+    iconClass: 'text-primary'
+  },
+  { 
+    label: 'Current Occupancy', 
+    value: '10/15 (65% full)',
+    icon: UserGroupIcon,
+    iconClass: 'text-primary'
+  },
+  { 
+    label: "Today's Bookings", 
+    value: '48',
+    icon: CalendarDaysIcon,
+    iconClass: 'text-primary'
+  },
+  { 
+    label: 'Pending Tickets', 
+    value: '48',
+    icon: TicketIcon,
+    iconClass: 'text-primary'
+  }
 ]
+
 
 const sessions = [
   { date: 'Tuesday - October 8, 2024', time: '8:00 am - 10:00 am', capacity: '10/15 spots left' },
@@ -38,7 +69,6 @@ const bookings = [
   }
 ]
 
-// Define columns with proper typing
 const columns: Column[] = [
   { key: 'name', label: 'Name' },
   { key: 'date', label: 'Date & Time' },
@@ -60,6 +90,16 @@ const columns: Column[] = [
   },
   { key: 'actions', label: 'Actions', type: 'actions' }
 ]
+
+onMounted(() => {
+  DashboardController.startUserCountUpdate((count) => {
+    totalUsers.value = count
+  })
+})
+
+onUnmounted(() => {
+  DashboardController.stopUserCountUpdate()
+})
 </script>
 
 <template>
@@ -71,7 +111,7 @@ const columns: Column[] = [
       <Card v-for="stat in stats" :key="stat.label" padding="p-4">
         <div class="flex items-center">
           <div class="mr-4">
-            <span class="text-4xl font-bold">{{ stat.value }}</span>
+            <span class="text-4xl font-bold">{{ typeof stat.value === 'string' ? stat.value : stat.value.value }}</span>
             <p class="text-gray-600">{{ stat.label }}</p>
           </div>
         </div>
@@ -122,7 +162,7 @@ const columns: Column[] = [
         <div class="space-y-4">
           <div class="flex justify-between items-center">
             <span>View All Users</span>
-            <span class="font-semibold">1,234 users</span>
+            <span class="font-semibold">{{ totalUsers }} users</span>
           </div>
           <div class="flex justify-between items-center">
             <span>New Registrations (This Week)</span>

@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import Tabs from '../components/ui/Tabs.vue'
 import TabPanel from '../components/ui/TabPanel.vue'
 import Table from '../components/ui/Table.vue'
+import ActivityStatus from '../components/ui/ActivityStatus.vue'
+import { User } from '../models/User'
+import { UserController } from '../controllers/UserController'
 
 const showDetails = ref(false)
 const currentTab = ref('profile')
+const users = ref<(User & { status: string })[]>([])
+const loading = ref(true)
 
 const tabs = [
   { name: 'Profile', key: 'profile' },
@@ -13,42 +18,40 @@ const tabs = [
   { name: 'Security', key: 'security' }
 ]
 
-const users = [
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'John Doe',
-    email: 'john@example.com',
-    status: 'Active'
-  },
-  {
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    status: 'Inactive'
-  }
-]
-
 const columns = [
-  { key: 'name', label: 'Name' },
-  { key: 'email', label: 'Email' },
+  { key: 'first_name', label: 'First Name' },
+  { key: 'last_name', label: 'Last Name' },
+  { key: 'email_address', label: 'Email' },
   { 
     key: 'status', 
     label: 'Status',
-    type: 'status' as const, // Add type assertion here
+    type: 'status' as const,
     statusColors: {
       'Active': { bg: 'bg-green-100', text: 'text-green-800' },
       'Inactive': { bg: 'bg-red-100', text: 'text-red-800' }
     }
   },
-  { key: 'actions', label: 'Actions', type: 'actions' as const } // Add type assertion here
+  { key: 'actions', label: 'Actions', type: 'actions' as const }
 ]
+
+const updateUsers = (updatedUsers: (User & { status: string })[]) => {
+  users.value = updatedUsers
+  loading.value = false
+}
 
 const openUserDetails = () => {
   showDetails.value = true
 }
+
+onMounted(() => {
+  // Start periodic updates every 10 seconds
+  UserController.startUserListUpdate(updateUsers, 10000)
+})
+
+onUnmounted(() => {
+  // Clean up the interval when component is unmounted
+  UserController.stopUserListUpdate()
+})
 </script>
 
 <template>
@@ -70,7 +73,12 @@ const openUserDetails = () => {
           >
         </div>
         
+        <div v-if="loading" class="p-4 text-center text-gray-500">
+          Loading users...
+        </div>
+        
         <Table 
+          v-else
           :columns="columns" 
           :data="users"
           max-height="400px"

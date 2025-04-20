@@ -13,6 +13,13 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+import { 
+  Users, 
+  Calendar, 
+  UserCheck, 
+  TrendingUp,
+  Clock 
+} from 'lucide-vue-next'
 
 ChartJS.register(
   CategoryScale,
@@ -96,7 +103,7 @@ const chartOptions = {
         <Card padding="p-4">
           <div class="flex items-center space-x-4">
             <div class="p-3 bg-primary/10 rounded-full">
-              👥
+              <Users class="w-6 h-6 text-primary" />
             </div>
             <div>
               <p class="text-sm text-gray-600">Total Users</p>
@@ -108,7 +115,7 @@ const chartOptions = {
         <Card padding="p-4">
           <div class="flex items-center space-x-4">
             <div class="p-3 bg-primary/10 rounded-full">
-              📅
+              <Calendar class="w-6 h-6 text-primary" />
             </div>
             <div>
               <p class="text-sm text-gray-600">Today's Bookings</p>
@@ -120,7 +127,7 @@ const chartOptions = {
         <Card padding="p-4">
           <div class="flex items-center space-x-4">
             <div class="p-3 bg-primary/10 rounded-full">
-              ⚡
+              <UserCheck class="w-6 h-6 text-primary" />
             </div>
             <div>
               <p class="text-sm text-gray-600">Active Users</p>
@@ -132,7 +139,7 @@ const chartOptions = {
         <Card padding="p-4">
           <div class="flex items-center space-x-4">
             <div class="p-3 bg-primary/10 rounded-full">
-              📊
+              <TrendingUp class="w-6 h-6 text-primary" />
             </div>
             <div>
               <p class="text-sm text-gray-600">Average Attendance Rate</p>
@@ -144,7 +151,7 @@ const chartOptions = {
         <Card padding="p-4">
           <div class="flex items-center space-x-4">
             <div class="p-3 bg-primary/10 rounded-full">
-              ⏰
+              <Clock class="w-6 h-6 text-primary" />
             </div>
             <div>
               <p class="text-sm text-gray-600">Peak Gym Hours</p>
